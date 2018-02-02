@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=0.5" charset="utf-8">
+	<title>FaceAPI HOL</title>
+</head>
+<body>
+<div>
+  <p>안녕하세요! Face API를 이용하여 사용자 인증서비스를 빠르게 만들어보는 실습을 진행하겠습니다.</p>
+  <h1>사진촬영</h1>
+  	<h3>1. 신분증 촬영</h3>
+	<!--
+		Ideally these elements aren't created until it's confirmed that the
+		client supports video/camera, but for the sake of illustrating the
+		elements involved, they are created with markup (not JavaScript)
+	-->
+	<p>
+		<video id="video" width="640" height="480" autoplay></video>
+		<br/>
+		<button id="snap">Snap Photo</button>
+		<br/>
+		<canvas id="canvas" width="640" height="480"></canvas>
+		<br/>
+		<button id="send">Send</button>
+		<br/>
+		FaceId : FaceId from Cognitive Services
+	</p>
+	
+	<h3>2. 사진 촬영</h3>
+	<h4>2-1. 정면 사진 촬영</h3>
+	<h4>2-2. 좌측 사진 촬영</h3>
+	<h4>2-3. 우측 사진 촬영</h3>
+	
+
+	<script>
+
+		// Put event listeners into place
+		window.addEventListener("DOMContentLoaded", function() {
+			// Grab elements, create settings, etc.
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            var mediaConfig =  { video: true };
+            var errBack = function(e) {
+            	console.log('An error has occurred!', e)
+            };
+
+			// Put video listeners into place
+            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
+                    video.src = window.URL.createObjectURL(stream);
+                    video.play();
+                });
+            }
+
+            /* Legacy code below! */
+            else if(navigator.getUserMedia) { // Standard
+				navigator.getUserMedia(mediaConfig, function(stream) {
+					video.src = stream;
+					video.play();
+				}, errBack);
+			} else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+				navigator.webkitGetUserMedia(mediaConfig, function(stream){
+					video.src = window.webkitURL.createObjectURL(stream);
+					video.play();
+				}, errBack);
+			} else if(navigator.mozGetUserMedia) { // Mozilla-prefixed
+				navigator.mozGetUserMedia(mediaConfig, function(stream){
+					video.src = window.URL.createObjectURL(stream);
+					video.play();
+				}, errBack);
+			}
+
+			// Trigger photo take
+			document.getElementById('snap').addEventListener('click', function() {
+				context.drawImage(video, 0, 0, 640, 480);
+			});
+		}, false);
+
+	</script>
+	<h3>3. 결과확인</h3>
+</div>
+
+</body>
+</html>
