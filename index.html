@@ -9,36 +9,58 @@
 <div>
   <p>안녕하세요! Face API를 이용하여 사용자 인증서비스를 빠르게 만들어보는 실습을 진행하겠습니다.</p>
   <h1>사진촬영</h1>
-  	<h3>1. 신분증 촬영</h3>
-	<!--
-		Ideally these elements aren't created until it's confirmed that the
-		client supports video/camera, but for the sake of illustrating the
-		elements involved, they are created with markup (not JavaScript)
-	-->
-	<p>
-		<video id="video" width="640" height="480" autoplay></video>
-		<br/>
-		<button id="snap">Snap Photo</button>
-		<br/>
-		<canvas id="canvas" width="640" height="480"></canvas>
-		<br/>
-		<button id="send">Send</button>
-		<br/>
-		<textarea id="responseTextArea" class="UIInput" style="width:580px; height:400px;"></textarea>
-		FaceId : FaceId from Cognitive Services
-	</p>
+	<div id="idcardCapture">
+		<h3 id="mytitle">1. 신분증 촬영</h3>
+		<!--
+			Ideally these elements aren't created until it's confirmed that the
+			client supports video/camera, but for the sake of illustrating the
+			elements involved, they are created with markup (not JavaScript)
+		-->
+		<p id="videoArea">
+			<video id="video" width="640" height="480" autoplay></video>
+			<br/>
+			<button id="snap">Snap Photo</button>
+			<br/>
+			<canvas id="canvas" width="640" height="480"></canvas>
+			<br/>
+			<button id="send">Send</button>
+			<br/>
+			<textarea id="responseTextArea" class="UIInput" style="width:580px; height:400px;"></textarea>
+			<br>
+			FaceId :<input id="myfaceId" type="text">
+		</p>
+	</div>
+	<div id="createPersonGroup">
+		<h3>2. Person Group 생성</h3>
+		PersonGroup 이름: <input id="personGroupId" type="text"><br>
+		PersonGroup Detail:<br>
+		<textarea id="personGroupDetail" class="UIInput" style="width:580px; height:400px;"></textarea>
+		<button id="personGroupSend">전송</button><br>		 
+		<h3 id="personGroupResult">결과가 표시될 예정입니다...</h3>
+			
+	</div>
+	<div id="cameraCapture">
+		<h3>3. 사진 촬영</h3>
+		<h4>3-1. 정면 사진 촬영</h4>
+		<h4>3-2. 좌측 사진 촬영</h4>
+		<h4>3-3. 우측 사진 촬영</h4>	
+	</div>
+	<div id="identifyResult">
+		<h3>4. 결과확인</h3>
+	</div>
 	
-	
-	<h3>2. 사진 촬영</h3>
-	<h4>2-1. 정면 사진 촬영</h4>
-	<h4>2-2. 좌측 사진 촬영</h4>
-	<h4>2-3. 우측 사진 촬영</h4>
-	
-
 	<script>
-
+		var stepNumber = 1;
 		// Put event listeners into place
+		var pgDetail = {name: "personGroup", userData: "user-provided data attached to the person group"};
+		var pgJsonString = JSON.stringify(pgDetail, null, '\t');
+
+
 		window.addEventListener("DOMContentLoaded", function() {
+			$("#personGroupDetail").val(pgJsonString);
+			$("#createPersonGroup").hide();
+			$("#cameraCapture").hide();
+			$("#identifyResult").hide();
 			// Grab elements, create settings, etc.
             var canvas = document.getElementById('canvas');
             var context = canvas.getContext('2d');
@@ -122,7 +144,21 @@
 		
 		        .done(function(data) {
 		            // Show formatted JSON on webpage.
+					var faceId = JSON.stringify(data[0].faceId);
+					console.log(faceId);
+					stepNumber ++;
+
 		            $("#responseTextArea").val(JSON.stringify(data, null, 2));
+					$("#myfaceId").val(faceId);	
+
+					//제목 바꿔주기
+					//$("#mytitle").text("2-1. 정면 사진촬영");					
+					$("#idcardCapture").hide();
+
+					$("#createPersonGroup").show();
+					
+					
+
 		        })
 		
 		        .fail(function(jqXHR, textStatus, errorThrown) {
@@ -135,12 +171,52 @@
 					
 			});
 			
+			document.getElementById('personGroupSend').addEventListener('click', function(){
+				//person group 생성 버튼 클릭시 jquery 호출 코드
+
+				//cognitive 서비스 호출
+				var subscriptionKey = "d53674714284400c885dd25bfd9f1617";
+				var uriBase = "https://westus.api.cognitive.microsoft.com/face/v1.0/persongroups";
+				var personGroupValue = $("#personGroupId").val();
+				var personGroupDetail = $("#personGroupDetail").val();
+				console.log(personGroupValue);
+
+				$.ajax({
+		            url: uriBase + "/" + personGroupValue,					
+		            // Request headers.
+		            beforeSend: function(xhrObj){
+		                xhrObj.setRequestHeader("Content-Type","application/json");
+		                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
+		            },
+					
+		            type: "PUT",
+					
+		            // Request body.
+		            data: personGroupDetail
+		        })
+		
+		        .done(function(data) {
+					$("#personGroupResult").text("성공적으로 생성되었습니다!");		   
+					stepNumber ++;				
+
+		        })
+		
+		        .fail(function(jqXHR, textStatus, errorThrown) {
+		            // Display error message.
+		            var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+		            errorString += (jqXHR.responseText === "") ? "" : (jQuery.parseJSON(jqXHR.responseText).message) ? 
+		                jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message;
+		            alert(errorString);
+		        });
+			})
+
+
 		}, false);
 		
 		
 
 	</script>
-	<h3>3. 결과확인</h3>
+	
 </div>
 
 </body>
