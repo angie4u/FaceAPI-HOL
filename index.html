@@ -54,7 +54,8 @@
 		// Put event listeners into place
 		var pgDetail = {name: "personGroup", userData: "user-provided data attached to the person group"};
 		var pgJsonString = JSON.stringify(pgDetail, null, '\t');
-
+        var faceId = "";
+		var personGroupId = "";
 
 		window.addEventListener("DOMContentLoaded", function() {
 			$("#personGroupDetail").val(pgJsonString);
@@ -144,7 +145,7 @@
 		
 		        .done(function(data) {
 		            // Show formatted JSON on webpage.
-					var faceId = JSON.stringify(data[0].faceId);
+					faceId = JSON.stringify(data[0].faceId);
 					console.log(faceId);
 					stepNumber ++;
 
@@ -177,12 +178,12 @@
 				//cognitive 서비스 호출
 				var subscriptionKey = "d53674714284400c885dd25bfd9f1617";
 				var uriBase = "https://westus.api.cognitive.microsoft.com/face/v1.0/persongroups";
-				var personGroupValue = $("#personGroupId").val();
+				personGroupId = $("#personGroupId").val();
 				var personGroupDetail = $("#personGroupDetail").val();
-				console.log(personGroupValue);
+				console.log(personGroupId);
 
 				$.ajax({
-		            url: uriBase + "/" + personGroupValue,					
+		            url: uriBase + "/" + personGroupId,					
 		            // Request headers.
 		            beforeSend: function(xhrObj){
 		                xhrObj.setRequestHeader("Content-Type","application/json");
@@ -198,6 +199,10 @@
 		        .done(function(data) {
 					$("#personGroupResult").text("성공적으로 생성되었습니다!");		   
 					stepNumber ++;				
+					
+					$("#createPersonGroup").hide();
+					$("#idcardCapture").show();
+					$("#mytitle").text("3-1. 정면 사진 촬영");
 
 		        })
 		
