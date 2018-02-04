@@ -3,6 +3,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=0.5" charset="utf-8">
 	<title>FaceAPI HOL</title>
+	<script src="./js/jquery-3.3.1.min.js"></script>
 </head>
 <body>
 <div>
@@ -23,8 +24,10 @@
 		<br/>
 		<button id="send">Send</button>
 		<br/>
+		<textarea id="responseTextArea" class="UIInput" style="width:580px; height:400px;"></textarea>
 		FaceId : FaceId from Cognitive Services
 	</p>
+	
 	
 	<h3>2. 사진 촬영</h3>
 	<h4>2-1. 정면 사진 촬영</h3>
@@ -75,7 +78,114 @@
 			document.getElementById('snap').addEventListener('click', function() {
 				context.drawImage(video, 0, 0, 640, 480);
 			});
+				
+			function dataURLtoBlob(dataurl) {
+			    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+			        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+			    while(n--){
+			        u8arr[n] = bstr.charCodeAt(n);
+			    }
+			    return new Blob([u8arr], {type:mime});
+			}
+
+			
+			// Trigger photo take
+			document.getElementById('send').addEventListener('click', function() {
+				//sendButtonClicked();
+				var imgURL = canvas.toDataURL();
+				var imageBinary = dataURLtoBlob(imgURL);
+				
+				//cognitive 서비스 호출
+				var subscriptionKey = "d53674714284400c885dd25bfd9f1617";
+				var uriBase = "https://westus.api.cognitive.microsoft.com/face/v1.0/detect";
+				var params = {
+		            "returnFaceId": "true",
+		            "returnFaceLandmarks": "false"
+				};
+				
+				// Perform the REST API call.
+		        $.ajax({
+		            url: uriBase + "?" + $.param(params),
+					processData:false,
+		            // Request headers.
+		            beforeSend: function(xhrObj){
+		                xhrObj.setRequestHeader("Content-Type","application/octet-stream");
+		                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
+		            },
+					
+		            type: "POST",
+					
+		            // Request body.
+		            data: imageBinary
+		        })
+		
+		        .done(function(data) {
+		            // Show formatted JSON on webpage.
+		            $("#responseTextArea").val(JSON.stringify(data, null, 2));
+		        })
+		
+		        .fail(function(jqXHR, textStatus, errorThrown) {
+		            // Display error message.
+		            var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+		            errorString += (jqXHR.responseText === "") ? "" : (jQuery.parseJSON(jqXHR.responseText).message) ? 
+		                jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message;
+		            alert(errorString);
+		        });
+					
+					
+			});
+			
 		}, false);
+		
+		//전송하기 버튼을 누르면 이미지를 코그니티브 서비스로 전송하여 Face Id 정보를 받아온다. 
+		function sendButtonClicked(){
+			var canvas = document.getElementById('canvas');			
+			var imgURL = canvas.toDataURL();
+			//var blob = dataURItoBlob(imgURL)			
+			
+			//cognitive 서비스 호출
+			var subscriptionKey = "d53674714284400c885dd25bfd9f1617";
+			var uriBase = "https://westus.api.cognitive.microsoft.com/face/v1.0/detect";
+			var params = {
+	            "returnFaceId": "true",
+	            "returnFaceLandmarks": "false"
+			};
+			
+			// Perform the REST API call.
+	        $.ajax({
+	            url: uriBase + "?" + $.param(params),
+				
+	            // Request headers.
+	            beforeSend: function(xhrObj){
+	                xhrObj.setRequestHeader("Content-Type","application/octet-stream");
+	                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
+	            },
+				
+	            type: "POST",
+				processData:false,
+				data: {imgBase64:imgURL}
+	            // Request body.
+	            //data: '{"url": ' + '"' + img + '"}',
+	        })
+	
+	        .done(function(data) {
+	            // Show formatted JSON on webpage.
+				
+				console.log(data);
+	            $("#responseTextArea").val(JSON.stringify(data, null, 2));
+				
+	        })
+	
+	        .fail(function(jqXHR, textStatus, errorThrown) {
+	            // Display error message.
+	            var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+	            errorString += (jqXHR.responseText === "") ? "" : (jQuery.parseJSON(jqXHR.responseText).message) ? 
+	                jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message;
+	            alert(errorString);
+	        });
+
+		}
+		
 
 	</script>
 	<h3>3. 결과확인</h3>
