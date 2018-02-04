@@ -54,9 +54,12 @@
 		// Put event listeners into place
 		var pgDetail = {name: "personGroup", userData: "user-provided data attached to the person group"};
 		var pgJsonString = JSON.stringify(pgDetail, null, '\t');
-        var faceId = "";
+        var faceId1 = "";
+		var faceId2 = "";
+		var faceId3 = "";
+		var faceId4 = "";
 		var personGroupId = "";
-
+		
 		window.addEventListener("DOMContentLoaded", function() {
 			$("#personGroupDetail").val(pgJsonString);
 			$("#createPersonGroup").hide();
@@ -97,6 +100,10 @@
 				}, errBack);
 			}
 
+			
+
+
+
 			// Trigger photo take
 			document.getElementById('snap').addEventListener('click', function() {
 				context.drawImage(video, 0, 0, 640, 480);
@@ -115,6 +122,7 @@
 			
 			// Trigger photo take
 			document.getElementById('send').addEventListener('click', function() {
+				
 				
 				var imgURL = canvas.toDataURL();
 				var imageBinary = dataURLtoBlob(imgURL);
@@ -145,19 +153,38 @@
 		
 		        .done(function(data) {
 		            // Show formatted JSON on webpage.
-					faceId = JSON.stringify(data[0].faceId);
-					console.log(faceId);
+					var returnFaceId = JSON.stringify(data[0].faceId);
+					console.log(returnFaceId);
+					if(stepNumber == 1)
+					{
+						faceId1 = returnFaceId
+					}
+					else if(stepNumber == 3)
+					{
+						faceId2 = returnFaceId
+					}
+					else if(stepNumber == 4)
+					{
+						faceId3 = returnFaceId
+					}
+					else if(stepNumber == 5)
+					{
+						faceId5 = returnFaceId
+					}
+
+
+					
+		            $("#responseTextArea").val(JSON.stringify(data, null, 2));
+					//$("#myfaceId").val(faceId);	
+
+					$("#idcardCapture").hide();
+					$("#createPersonGroup").show();
+			
+
+					
+					
 					stepNumber ++;
 
-		            $("#responseTextArea").val(JSON.stringify(data, null, 2));
-					$("#myfaceId").val(faceId);	
-
-					//제목 바꿔주기
-					//$("#mytitle").text("2-1. 정면 사진촬영");					
-					$("#idcardCapture").hide();
-
-					$("#createPersonGroup").show();
-					
 					
 
 		        })
@@ -202,7 +229,7 @@
 					
 					$("#createPersonGroup").hide();
 					$("#idcardCapture").show();
-					$("#mytitle").text("3-1. 정면 사진 촬영");
+					
 
 		        })
 		
