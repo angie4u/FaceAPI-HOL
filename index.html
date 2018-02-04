@@ -30,9 +30,9 @@
 	
 	
 	<h3>2. 사진 촬영</h3>
-	<h4>2-1. 정면 사진 촬영</h3>
-	<h4>2-2. 좌측 사진 촬영</h3>
-	<h4>2-3. 우측 사진 촬영</h3>
+	<h4>2-1. 정면 사진 촬영</h4>
+	<h4>2-2. 좌측 사진 촬영</h4>
+	<h4>2-3. 우측 사진 촬영</h4>
 	
 
 	<script>
@@ -88,10 +88,11 @@
 			    return new Blob([u8arr], {type:mime});
 			}
 
+
 			
 			// Trigger photo take
 			document.getElementById('send').addEventListener('click', function() {
-				//sendButtonClicked();
+				
 				var imgURL = canvas.toDataURL();
 				var imageBinary = dataURLtoBlob(imgURL);
 				
@@ -130,61 +131,12 @@
 		            errorString += (jqXHR.responseText === "") ? "" : (jQuery.parseJSON(jqXHR.responseText).message) ? 
 		                jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message;
 		            alert(errorString);
-		        });
-					
+		        });					
 					
 			});
 			
 		}, false);
 		
-		//전송하기 버튼을 누르면 이미지를 코그니티브 서비스로 전송하여 Face Id 정보를 받아온다. 
-		function sendButtonClicked(){
-			var canvas = document.getElementById('canvas');			
-			var imgURL = canvas.toDataURL();
-			//var blob = dataURItoBlob(imgURL)			
-			
-			//cognitive 서비스 호출
-			var subscriptionKey = "d53674714284400c885dd25bfd9f1617";
-			var uriBase = "https://westus.api.cognitive.microsoft.com/face/v1.0/detect";
-			var params = {
-	            "returnFaceId": "true",
-	            "returnFaceLandmarks": "false"
-			};
-			
-			// Perform the REST API call.
-	        $.ajax({
-	            url: uriBase + "?" + $.param(params),
-				
-	            // Request headers.
-	            beforeSend: function(xhrObj){
-	                xhrObj.setRequestHeader("Content-Type","application/octet-stream");
-	                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
-	            },
-				
-	            type: "POST",
-				processData:false,
-				data: {imgBase64:imgURL}
-	            // Request body.
-	            //data: '{"url": ' + '"' + img + '"}',
-	        })
-	
-	        .done(function(data) {
-	            // Show formatted JSON on webpage.
-				
-				console.log(data);
-	            $("#responseTextArea").val(JSON.stringify(data, null, 2));
-				
-	        })
-	
-	        .fail(function(jqXHR, textStatus, errorThrown) {
-	            // Display error message.
-	            var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
-	            errorString += (jqXHR.responseText === "") ? "" : (jQuery.parseJSON(jqXHR.responseText).message) ? 
-	                jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message;
-	            alert(errorString);
-	        });
-
-		}
 		
 
 	</script>
