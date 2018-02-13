@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">   
+    <title>Face API HOL</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="blog.css" rel="stylesheet">    
+  </head>
+
+  <body>
+    <div class="container">
+
+      <div class="blog-header">
+        <h1 class="blog-title">Face API Hands On Lab</h1>
+        <p class="lead blog-description">Microsoft의 인공지능 서비스인 Face API를 활용하여 사용자를 인증하는 서비스를 만들어봅니다. 간단한 API 호출만으로도 쉽고 빠르게 사진을 이용한 본인확인 서비스를 만들어 보실 수 있습니다. 시작해볼까요?</p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+          <div class="blog-post">            
+            <h2>Step2. 신분증 촬영</h2>
+            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>            
+            <video  id="video" width="640" height="480" autoplay style="border:1px solid #000000;"></video>
+            <br>
+            <button type="button" class="btn btn-primary">촬영하기</button>
+            <br>
+            <canvas id="canvas" width="640" height="480" style="border:1px solid #000000;"></canvas>
+            <button type="button" class="btn btn-primary">전송하기</button>       
+                           
+          </div><!-- /.blog-post -->
+          <div class="blog-post">
+              <h3>결과 보기</h3> 
+              <pre><code>json value will be displayed</code></pre>  
+          </div>
+          <nav>
+            <ul class="pager">
+              <li><a href="home.html">Previous</a></li>
+              <li><a href="page2.html">Next</a></li>
+            </ul>
+          </nav>
+
+        </div><!-- /.blog-main -->
+        
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>Information</h4>
+            <ol class="list-unstyled">
+              <li><b>Face Id</b></li>
+              <li id="liPersonGroupName" visible="hidden">FaceId Value</li>                            
+            </ol>            
+          </div>                 
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <footer class="blog-footer">
+      <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+      <p>
+        <a href="#">Back to top</ad>
+      </p>
+    </footer>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", function() {
+        var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            var mediaConfig =  { video: true };
+            var errBack = function(e) {
+            	console.log('An error has occurred!', e)
+            };
+
+		  	// Put video listeners into place
+        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
+                video.src = window.URL.createObjectURL(stream);
+                video.play();
+            });
+        }
+
+        /* Legacy code below! */
+        else if(navigator.getUserMedia) { // Standard
+          navigator.getUserMedia(mediaConfig, function(stream) {
+            video.src = stream;
+            video.play();
+          }, errBack);
+        } else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+            navigator.webkitGetUserMedia(mediaConfig, function(stream){
+              video.src = window.webkitURL.createObjectURL(stream);
+              video.play();
+            }, errBack);
+        } else if(navigator.mozGetUserMedia) { // Mozilla-prefixed
+          navigator.mozGetUserMedia(mediaConfig, function(stream){
+            video.src = window.URL.createObjectURL(stream);
+            video.play();
+          }, errBack);
+        }			
+      }, false);
+		
+    </script>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- <script src="../../dist/js/bootstrap.min.js"></script> -->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
+  </body>
+</html>

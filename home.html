@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">   
+    <title>Face API HOL</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="blog.css" rel="stylesheet">    
+  </head>
+
+  <body>
+    <div class="container">
+
+      <div class="blog-header">
+        <h1 class="blog-title">Face API Hands On Lab</h1>
+        <p class="lead blog-description">Microsoft의 인공지능 서비스인 Face API를 활용하여 사용자를 인증하는 서비스를 만들어봅니다. 간단한 API 호출만으로도 쉽고 빠르게 사진을 이용한 본인확인 서비스를 만들어 보실 수 있습니다. 시작해볼까요?</p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+          <div class="blog-post">            
+            <h2>Step1. 키 값 설정 및 Person 생성</h2>
+            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+            <br>
+            <h3>1-1. Azure Subscription Key 입력</h3>
+            <form>
+                <div class="form-group">
+                    <label for="lbSubscriptionKey">Face API 이용 Key 입력</label>
+                    <input type="text" class="form-control" id="inputSubscriptionKey" placeholder="d53674714284400c885dd25bfd******">
+                </div>
+                <div class="form-group">
+                    <label for="lbEndpoint">Face API Endpoint 입력</label>
+                    <input type="text" class="form-control" id="inputEndpoint" placeholder="https://westus.api.cognitive.microsoft.com/face/v1.0">
+                </div>                
+            </form>
+            <br>
+            <h3>1-2. Person Group 생성</h3> 
+            <form>
+                <div class="form-group">
+                    <label for="lbPersonGroup">Person Group 이름</label>
+                    <input type="text" class="form-control" id="inputPersonGroup" placeholder="group1">
+                </div>
+                <div class="form-group">
+                    <label for="lbPersonGroupDesc">Person Group 설명</label>
+                    <input type="text" class="form-control" id="inputPersonGroupDesc" placeholder="user-provided data attached to the person group(생략가능)">
+                </div>                
+            </form>           
+           <br>
+            <h3>1-3. Person 생성</h3>
+            <form>
+                <div class="form-group">
+                    <label for="lbPerson">Person 이름</label>
+                    <input type="text" class="form-control" id="inputPerson" placeholder="Person1">
+                </div>
+                <div class="form-group">
+                    <label for="lbPersonGroupDesc">Person 설명</label>
+                    <input type="text" class="form-control" id="inputPersonDesc" placeholder="user-provided data attached to the person(생략가능)">
+                </div>                
+            </form>      
+            
+          </div><!-- /.blog-post -->
+
+
+          <nav>
+            <ul class="pager">
+              <!-- <li><a href="#">Previous</a></li> -->
+              <li><a href="page1.html">Next</a></li>
+            </ul>
+          </nav>
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>Information</h4>
+            <ol class="list-unstyled">
+              <li><b>PersonGroup 이름</b></li>
+              <li id="liPersonGroupName" visible="hidden">group1</li>
+              <li><b>PersonGroup Id</b></li>
+              <li><b>Person 이름</b></li>
+              <li><b>Person Id</b></li>                
+            </ol>            
+          </div>       
+          
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <footer class="blog-footer">
+      <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+      <p>
+        <a href="#">Back to top</ad>
+      </p>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- <script src="../../dist/js/bootstrap.min.js"></script> -->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
+  </body>
+</html>
