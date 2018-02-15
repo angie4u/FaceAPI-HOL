@@ -14,7 +14,38 @@ window.addEventListener('DOMContentLoaded', function () {
 
   var subscriptionKey = document.getElementById('inputSubscriptionKey').value
   var endpoint = document.getElementById('inputEndpoint').value
-  var personGroupId = document.getElementById('inputEndpoint').value
+
+  var personGroupName = document.getElementById('inputPersonGroup').value
+  var personGroupDesc = document.getElementById('inputPersonGroupDesc').value
+
+  // person group 생성 요청
+  document.getElementById('personGroupSubmit').addEventListener('click', function () {
+    // person group 생성 버튼 클릭시 jquery 호출 코드
+
+    // cognitive 서비스 호출
+    var uriBase = endpoint + '/persongroups'
+
+    $.ajax({
+      url: uriBase + '/' + personGroupName,
+        // Request headers.
+      beforeSend: function (xhrObj) {
+        xhrObj.setRequestHeader('Content-Type', 'application/json')
+        xhrObj.setRequestHeader('Ocp-Apim-Subscription-Key', subscriptionKey)
+      },
+      type: 'PUT',
+      data: personGroupDesc
+    })
+    .done(function (data) {
+      $('#personGroupResult').text('성공적으로 생성되었습니다!')
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+        // Display error message.
+      var errorString = (errorThrown === '') ? 'Error. ' : errorThrown + ' (' + jqXHR.status + '): '
+      errorString += (jqXHR.responseText === '') ? '' : (jQuery.parseJSON(jqXHR.responseText).message)
+            ? jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message
+      alert(errorString)
+    })
+  })
 
   $('#personGroupDetail').val(pgJsonString)
   $('#createPersonGroup').hide()
@@ -119,47 +150,6 @@ window.addEventListener('DOMContentLoaded', function () {
           $('#createPersonGroup').show()
 
           stepNumber++
-        })
-
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            // Display error message.
-          var errorString = (errorThrown === '') ? 'Error. ' : errorThrown + ' (' + jqXHR.status + '): '
-          errorString += (jqXHR.responseText === '') ? '' : (jQuery.parseJSON(jqXHR.responseText).message)
-                ? jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message
-          alert(errorString)
-        })
-  })
-
-  document.getElementById('personGroupSend').addEventListener('click', function () {
-        // person group 생성 버튼 클릭시 jquery 호출 코드
-
-        // cognitive 서비스 호출
-    var subscriptionKey = 'd53674714284400c885dd25bfd9f1617'
-    var uriBase = 'https://westus.api.cognitive.microsoft.com/face/v1.0/persongroups'
-    personGroupId = $('#personGroupId').val()
-    var personGroupDetail = $('#personGroupDetail').val()
-    console.log(personGroupId)
-
-    $.ajax({
-      url: uriBase + '/' + personGroupId,
-            // Request headers.
-      beforeSend: function (xhrObj) {
-        xhrObj.setRequestHeader('Content-Type', 'application/json')
-        xhrObj.setRequestHeader('Ocp-Apim-Subscription-Key', subscriptionKey)
-      },
-
-      type: 'PUT',
-
-            // Request body.
-      data: personGroupDetail
-    })
-
-        .done(function (data) {
-          $('#personGroupResult').text('성공적으로 생성되었습니다!')
-          stepNumber++
-
-          $('#createPersonGroup').hide()
-          $('#idcardCapture').show()
         })
 
         .fail(function (jqXHR, textStatus, errorThrown) {
