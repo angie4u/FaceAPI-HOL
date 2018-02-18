@@ -1,5 +1,5 @@
 window.onload = function () {
-  $('#liPersonGroupName').hide()
+  $('#liPersonGroupId').hide()
   $('#liPersonId').hide()
 
   var subscriptionKey = document.getElementById('inputSubscriptionKey')
@@ -21,30 +21,37 @@ window.onload = function () {
   document.getElementById('inputPersonDesc').defaultValue = personDesc
 
   var sendPersonGroup = document.getElementById('personGroupSubmit')
-  sendPersonGroup.addEventListener('click', function () {
-    // personGroup 생성 요청
 
-    // cognitive 서비스 호출
-    var uriBase = endpoint.value + '/persongroups'
-    var bodyDetail = document.getElementById('inputPersonGroupDesc')
-
+  // api request
+  function apiRequest (uri, body, method, flag) {
     $.ajax({
-      url: uriBase + '/' + personGroupName.value,
+      url: uri,
           // Request headers.
       beforeSend: function (xhrObj) {
         xhrObj.setRequestHeader('Content-Type', 'application/json')
         xhrObj.setRequestHeader('Ocp-Apim-Subscription-Key', subscriptionKey.value)
       },
-      type: 'PUT',
-      data: bodyDetail.value
+      type: method,
+      data: body
     })
       .done(function (data) {
         // $('#personGroupResult').text('성공적으로 생성되었습니다!')
         // $('#personGroupResult').text(data)
         console.log(data)
-        $('#personGroupResult').show()
-        $('#liPersonGroupName').value(personGroupName.value)
-        $('#liPersonGroupName').show()
+        console.log(flag)
+        if (flag === 1) {
+          $('#personGroupResult').show()
+          document.getElementById('liPersonGroupId').innerHTML = personGroupName.value
+          $('#liPersonGroupId').show()
+        } else if (flag === 2) {
+          var personId = data.personId
+          console.log(personId)
+          var jsonResult = JSON.stringify(data)
+
+          $('#personResult').text(jsonResult)
+          document.getElementById('liPersonId').innerHTML = personId
+          $('#liPersonId').show()
+        }
       })
       .fail(function (jqXHR, textStatus, errorThrown) {
           // Display error message.
@@ -53,6 +60,20 @@ window.onload = function () {
               ? jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message
         alert(errorString)
       })
+  }
+
+  sendPersonGroup.addEventListener('click', function () {
+    // personGroup 생성 요청
+
+    // cognitive 서비스 호출
+    var uriBase = endpoint.value + '/persongroups'
+    var bodyDetail = document.getElementById('inputPersonGroupDesc')
+    var uri = uriBase + '/' + personGroupName.value
+    var method = 'PUT'
+    var body = bodyDetail.value
+    var flag = 1
+
+    apiRequest(uri, body, method, flag)
   })
 
   var sendPerson = document.getElementById('personSubmit')
@@ -63,37 +84,11 @@ window.onload = function () {
     var uriBase = endpoint.value + '/persongroups'
     var bodyDetail = document.getElementById('inputPersonDesc')
 
-    $.ajax({
-      url: uriBase + '/' + personName.value + '/persons',
-          // Request headers.
-      beforeSend: function (xhrObj) {
-        xhrObj.setRequestHeader('Content-Type', 'application/json')
-        xhrObj.setRequestHeader('Ocp-Apim-Subscription-Key', subscriptionKey.value)
-      },
-      type: 'POST',
-      data: bodyDetail.value
-    })
-      .done(function (data) {
-        // $('#personGroupResult').text('성공적으로 생성되었습니다!')
-        // $('#personGroupResult').text(data)
-        console.log(data)
-        var jsonObject = JSON.parse(data)
-        var personId = jsonObject.personId
-        console.log(personId)
-        var jsonResult = JSON.stringify(data)
+    var uri = uriBase + '/' + personName.value + '/persons'
+    var body = bodyDetail.value
+    var method = 'POST'
+    var flag = 2
 
-        // $('#personGroupResult').show()
-        $('#personResult').text(jsonResult)
-        $('#liPersonId').value(personId)
-        $('#liPersonId').show()
-      })
-      .fail(function (jqXHR, textStatus, errorThrown) {
-          // Display error message.
-        var errorString = (errorThrown === '') ? 'Error. ' : errorThrown + ' (' + jqXHR.status + '): '
-        errorString += (jqXHR.responseText === '') ? '' : (jQuery.parseJSON(jqXHR.responseText).message)
-              ? jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message
-        alert(errorString)
-        console.log(errorString)
-      })
+    apiRequest(uri, body, method, flag)
   })
 }
