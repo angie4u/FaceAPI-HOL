@@ -3,7 +3,7 @@ window.onload = function () {
     // document.getElementById('liEnpoint').innerHTML = localStorage.getItem('url')
     // document.getElementById('liPersonGroupId').innerHTML = localStorage.getItem('personGroup')
     // document.getElementById('liPersonId').innerHTML = localStorage.getItem('person')
-    
+    var faceId = document.getElementById('inputPersonGroup')
     
     document.getElementById('liSubscriptionKey').innerHTML = 'd53674714284400c885dd25bfd9f1617'
     document.getElementById('liEnpoint').innerHTML = 'https://westus.api.cognitive.microsoft.com/face/v1.0'
@@ -88,6 +88,7 @@ window.onload = function () {
         
             console.log(data)
             var returnFaceId = JSON.stringify(data[0].faceId)
+        
             console.log(returnFaceId)
             localStorage.setItem('faceId',returnFaceId)
             document.getElementById('liFaceId').innerHTML = returnFaceId
