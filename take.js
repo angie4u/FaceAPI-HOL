@@ -90,7 +90,7 @@ window.onload = function () {
             var returnFaceId = JSON.stringify(data[0].faceId)
             console.log(returnFaceId)
             localStorage.setItem('faceId',returnFaceId)
-            document.getElementById('liFaceId').innerHTML = localStorage.getItem('faceId')
+            document.getElementById('liFaceId').innerHTML = returnFaceId
             $('#takePhotoResult').val(JSON.stringify(data, null, 2))
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
