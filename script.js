@@ -15,6 +15,7 @@ window.addEventListener('DOMContentLoaded', function () {
   var subscriptionKey = document.getElementById('inputSubscriptionKey').value
   var endpoint = document.getElementById('inputEndpoint').value
 
+
   var personGroupName = document.getElementById('inputPersonGroup').value
   var personGroupDesc = document.getElementById('inputPersonGroupDesc').value
 

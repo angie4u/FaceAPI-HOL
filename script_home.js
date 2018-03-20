@@ -1,6 +1,9 @@
 window.onload = function () {
-  $('#liPersonGroupId').hide()
-  $('#liPersonId').hide()
+  // $('#liPersonGroupId').hide()
+  // $('#liPersonId').hide()
+
+  // var pageName = location.href.split('/').slice(-1).toString()
+  // console.log(pageName)
 
   var subscriptionKey = document.getElementById('inputSubscriptionKey')
   var endpoint = document.getElementById('inputEndpoint')
@@ -9,6 +12,16 @@ window.onload = function () {
   // var personGroupDesc = document.getElementById('inputPersonGroupDesc')
   var personGroupJson = {name: 'personGroup', userData: 'user-provided data attached to the person group'}
   var personGroupDesc = JSON.stringify(personGroupJson, null, '\t')
+
+  document.getElementById('inputEndpoint').addEventListener('change', () => {
+    localStorage.setItem('url', endpoint.value)
+    document.getElementById('liEnpoint').innerHTML = localStorage.getItem('url')
+  })
+
+  document.getElementById('inputSubscriptionKey').addEventListener('change', () => {
+    localStorage.setItem('key', subscriptionKey.value)
+    document.getElementById('liSubscriptionKey').innerHTML = localStorage.getItem('key')
+  })
 
   document.getElementById('inputPersonGroupDesc').defaultValue = personGroupDesc
   $('#personGroupResult').hide()
@@ -19,14 +32,50 @@ window.onload = function () {
   var personDesc = JSON.stringify(personJson, null, '\t')
 
   document.getElementById('inputPersonDesc').defaultValue = personDesc
-
   var sendPersonGroup = document.getElementById('personGroupSubmit')
+
+  // var canvas = document.getElementById('canvas')
+  // var context = canvas.getContext('2d')
+  // var video = document.getElementById('video')
+  // var mediaConfig = { video: true }
+  // var errBack = function (e) {
+  //   console.log('An error has occurred!', e)
+  // }
+
+  // if (pageName === 'page1.html') {
+  //   // Put video listeners into place
+  //   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  //     navigator.mediaDevices.getUserMedia(mediaConfig).then(function (stream) {
+  //       video.src = window.URL.createObjectURL(stream)
+  //       video.play()
+  //     })
+  //   }
+
+  //   /* Legacy code below! */
+  //   else if (navigator.getUserMedia) { // Standard
+  //     navigator.getUserMedia(mediaConfig, function (stream) {
+  //       video.src = stream
+  //       video.play()
+  //     }, errBack)
+  //   } else if (navigator.webkitGetUserMedia) { // WebKit-prefixed
+  //     navigator.webkitGetUserMedia(mediaConfig, function (stream) {
+  //       video.src = window.webkitURL.createObjectURL(stream)
+  //       video.play()
+  //     }, errBack)
+  //   } else if (navigator.mozGetUserMedia) { // Mozilla-prefixed
+  //     navigator.mozGetUserMedia(mediaConfig, function (stream) {
+  //       video.src = window.URL.createObjectURL(stream)
+  //       video.play()
+  //     }, errBack)
+  //   }
+  // }
 
   // api request
   function apiRequest (uri, body, method, flag) {
     $.ajax({
       url: uri,
           // Request headers.
+      processData: false,
       beforeSend: function (xhrObj) {
         xhrObj.setRequestHeader('Content-Type', 'application/json')
         xhrObj.setRequestHeader('Ocp-Apim-Subscription-Key', subscriptionKey.value)
@@ -39,10 +88,16 @@ window.onload = function () {
         // $('#personGroupResult').text(data)
         console.log(data)
         console.log(flag)
+        // local Storage에 필요한 변수들 저장
+
         if (flag === 1) {
+          // personGroup 생성하는 경우
           $('#personGroupResult').show()
           document.getElementById('liPersonGroupId').innerHTML = personGroupName.value
           $('#liPersonGroupId').show()
+
+          localStorage.setItem('personGroup', personGroupName.value)
+          document.getElementById('liPersonGroupId').innerHTML = localStorage.getItem('personGroup')
         } else if (flag === 2) {
           var personId = data.personId
           console.log(personId)
@@ -51,6 +106,13 @@ window.onload = function () {
           $('#personResult').text(jsonResult)
           document.getElementById('liPersonId').innerHTML = personId
           $('#liPersonId').show()
+
+          localStorage.setItem('person', personId)
+          document.getElementById('liPersonId').innerHTML = localStorage.getItem('person')
+        } else if (flag === 3) {
+          var returnFaceId = JSON.stringify(data[0].faceId)
+          console.log(returnFaceId)
+          $('#responseTextArea').val(JSON.stringify(data, null, 2))
         }
       })
       .fail(function (jqXHR, textStatus, errorThrown) {
@@ -72,6 +134,9 @@ window.onload = function () {
     var method = 'PUT'
     var body = bodyDetail.value
     var flag = 1
+
+    // localStorage.setItem('url', endpoint.value)
+    // document.getElementById('liEnpoint').innerHTML = localStorage.getItem('url')
 
     apiRequest(uri, body, method, flag)
   })

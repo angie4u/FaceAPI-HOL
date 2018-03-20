@@ -28,7 +28,7 @@
         <div class="col-sm-8 blog-main">
 
           <div class="blog-post">            
-            <h2>Step2. 신분증 촬영</h2>
+            <h2>Step3. 사진 촬영</h2>
             <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>            
             <video  id="video" width="640" height="480" autoplay style="border:1px solid #000000;"></video>
             <br>
@@ -40,12 +40,12 @@
           </div><!-- /.blog-post -->
           <div class="blog-post">
               <h3>결과 보기</h3> 
-              <pre><code>json value will be displayed</code></pre>  
+              <textarea id="takePhotoResult" placeholder="결과값이 표시될 예정입니다" class="form-control" rows="3"></textarea> 
           </div>
           <nav>
             <ul class="pager">
-              <li><a href="home.html">Previous</a></li>
-              <li><a href="page2.html">Next</a></li>
+              <li><a href="uploadPhoto.html">Previous</a></li>
+              <li><a href="result.html">Next</a></li>
             </ul>
           </nav>
 
@@ -61,7 +61,10 @@
             <b>PersonGroup Id</b><br>
             <p id="liPersonGroupId">groudId</p>
             <b>PersonId</b>
-            <p id="liPersonId">personId</p>           
+            <p id="liPersonId">personId</p>
+            <b>FaceId</b>
+            <p id="liFaceId ">faceId</p>    
+                  
           </div>                 
         </div><!-- /.blog-sidebar -->
 
@@ -80,7 +83,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="./script_page.js"></script>    
+    <script src="./take.js"></script>    
     
   </body>
 </html>
