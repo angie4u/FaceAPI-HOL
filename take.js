@@ -91,7 +91,7 @@ window.onload = function () {
         
             console.log(returnFaceId)
             localStorage.setItem('faceId',returnFaceId)
-            document.getElementById('liFaceId').innerHTML = returnFaceId
+            document.getElementById('liFaceId').innerHTML = localStorage.getItem('faceId')
             $('#takePhotoResult').val(JSON.stringify(data, null, 2))
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
