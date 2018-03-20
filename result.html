@@ -40,6 +40,7 @@
                   60%
                 </div>
               </div> 
+              <h4 id="verificationResult">결과</h3> 
           </div>
 
           <nav>
@@ -72,49 +73,11 @@
       </p>
     </footer>
 
-    <script>
-      window.addEventListener("DOMContentLoaded", function() {
-        var canvas = document.getElementById('canvas');
-            var context = canvas.getContext('2d');
-            var video = document.getElementById('video');
-            var mediaConfig =  { video: true };
-            var errBack = function(e) {
-            	console.log('An error has occurred!', e)
-            };
-
-		  	// Put video listeners into place
-        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
-                video.src = window.URL.createObjectURL(stream);
-                video.play();
-            });
-        }
-
-        /* Legacy code below! */
-        else if(navigator.getUserMedia) { // Standard
-          navigator.getUserMedia(mediaConfig, function(stream) {
-            video.src = stream;
-            video.play();
-          }, errBack);
-        } else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
-            navigator.webkitGetUserMedia(mediaConfig, function(stream){
-              video.src = window.webkitURL.createObjectURL(stream);
-              video.play();
-            }, errBack);
-        } else if(navigator.mozGetUserMedia) { // Mozilla-prefixed
-          navigator.mozGetUserMedia(mediaConfig, function(stream){
-            video.src = window.URL.createObjectURL(stream);
-            video.play();
-          }, errBack);
-        }			
-      }, false);
-		
-    </script>
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="./result.js"></script> 
     <!-- <script src="../../dist/js/bootstrap.min.js"></script> -->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
